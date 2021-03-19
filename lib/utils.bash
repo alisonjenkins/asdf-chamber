@@ -39,7 +39,7 @@ download_release() {
   filename="$2"
 
   ttps://github.com/segmentio/chamber/releases/download/v2.9.1/chamber-v2.9.1-darwin-amd64
-  url="$GH_REPO/releases/download/v${version}/${TOOL_NAME}-v${version}-${platform}-amd64"
+  url="$GH_REPO/releases/download/v${version}/${TOOL_NAME}-v${version}-${PLATFORM}-amd64"
 
   echo "* Downloading $TOOL_NAME release $version..."
   curl -L "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -54,7 +54,7 @@ install_version() {
     fail "asdf-$TOOL_NAME supports release installs only"
   fi
 
-  local release_file="$install_path/${TOOL_NAME}-v${version}-${platform}-amd64"
+  local release_file="$install_path/${TOOL_NAME}-v${version}-${PLATFORM}-amd64"
   (
     mkdir -p "$install_path"
     download_release "$version" "$release_file"
