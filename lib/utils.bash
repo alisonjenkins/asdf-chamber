@@ -55,10 +55,10 @@ install_version() {
 
   local release_file="$install_path/${TOOL_NAME}-v${version}-${PLATFORM}-amd64"
   (
-    mkdir -p "$install_path"
+    mkdir -p "$install_path/bin"
     download_release "$version" "$release_file"
-    mv "$release_file" "$install_path/chamber"
-    chmod +x "$install_path/chamber"
+    mv "$release_file" "$install_path/bin/$tool_cmd"
+    chmod +x "$install_path/bin/$tool_cmd"
 
     local tool_cmd
     tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
