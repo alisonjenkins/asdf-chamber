@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for chamber.
 GH_REPO="https://github.com/segmentio/chamber"
 TOOL_NAME="chamber"
 TOOL_TEST="chamber version"
@@ -14,7 +13,6 @@ fail() {
 
 curl_opts=(-fsSL)
 
-# NOTE: You might want to remove this if chamber is not hosted on GitHub releases.
 if [ -n "${GITHUB_API_TOKEN:-}" ]; then
   curl_opts=("${curl_opts[@]}" -H "Authorization: token $GITHUB_API_TOKEN")
 fi
@@ -27,7 +25,7 @@ sort_versions() {
 list_github_tags() {
   git ls-remote --tags --refs "$GH_REPO" |
     grep -o 'refs/tags/.*' | cut -d/ -f3- |
-    sed 's/^v//' # NOTE: You might want to adapt this sed to remove non-version strings from tags
+    sed 's/^v//'
 }
 
 list_all_versions() {
@@ -38,14 +36,15 @@ list_all_versions() {
 
 download_release() {
   local version filename url
+  platform=$(uname | tr '[:upper:]' '[:lower:]')
   version="$1"
   filename="$2"
 
-  # TODO: Adapt the release URL convention for chamber
-  url="$GH_REPO/archive/v${version}.tar.gz"
+  ttps://github.com/segmentio/chamber/releases/download/v2.9.1/chamber-v2.9.1-darwin-amd64
+  url="$GH_REPO/releases/download/v${version}/${TOOL_NAME}-v${version}-${platform}-amd64"
 
   echo "* Downloading $TOOL_NAME release $version..."
-  curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+  curl -L "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
 install_version() {
@@ -57,15 +56,13 @@ install_version() {
     fail "asdf-$TOOL_NAME supports release installs only"
   fi
 
-  # TODO: Adapt this to proper extension and adapt extracting strategy.
-  local release_file="$install_path/$TOOL_NAME-$version.tar.gz"
+  local release_file="$install_path/${TOOL_NAME}-v${version}-${platform}-amd64"
   (
     mkdir -p "$install_path"
     download_release "$version" "$release_file"
-    tar -xzf "$release_file" -C "$install_path" --strip-components=1 || fail "Could not extract $release_file"
-    rm "$release_file"
+    mv "$release_file" "$install_path"
+    chmod +x "$install_path/$release_file"
 
-    # TODO: Asert chamber executable exists.
     local tool_cmd
     tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
     test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
