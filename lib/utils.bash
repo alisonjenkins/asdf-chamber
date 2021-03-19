@@ -58,7 +58,7 @@ install_version() {
     mkdir -p "$install_path"
     download_release "$version" "$release_file"
     mv "$release_file" "$install_path/chamber"
-    chmod +x "$install_path"
+    chmod +x "$install_path/chamber"
 
     local tool_cmd
     tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
