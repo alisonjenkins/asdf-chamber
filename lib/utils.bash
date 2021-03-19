@@ -38,7 +38,6 @@ download_release() {
   version="$1"
   filename="$2"
 
-  ttps://github.com/segmentio/chamber/releases/download/v2.9.1/chamber-v2.9.1-darwin-amd64
   url="$GH_REPO/releases/download/v${version}/${TOOL_NAME}-v${version}-${PLATFORM}-amd64"
 
   echo "* Downloading $TOOL_NAME release $version..."
@@ -59,7 +58,7 @@ install_version() {
     mkdir -p "$install_path"
     download_release "$version" "$release_file"
     mv "$release_file" "$install_path"
-    chmod +x "$install_path/$release_file"
+    chmod +x "$install_path"
 
     local tool_cmd
     tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
