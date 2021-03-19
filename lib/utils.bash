@@ -5,6 +5,7 @@ set -euo pipefail
 GH_REPO="https://github.com/segmentio/chamber"
 TOOL_NAME="chamber"
 TOOL_TEST="chamber version"
+PLATFORM=$(uname | tr '[:upper:]' '[:lower:]')
 
 fail() {
   echo -e "asdf-$TOOL_NAME: $*"
@@ -36,7 +37,6 @@ list_all_versions() {
 
 download_release() {
   local version filename url
-  platform=$(uname | tr '[:upper:]' '[:lower:]')
   version="$1"
   filename="$2"
 
